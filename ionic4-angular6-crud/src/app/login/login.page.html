@@ -1,0 +1,325 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding >
+        <form (ngSubmit)="onSubmitlogin()" [formGroup]="loginForm" class="col-lg-5 col-lg-offset-2" *ngIf="false" >
+        <div class="form-group">
+          <label for="name">User Name</label>
+          <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && loginf.name.errors }" />
+          <div *ngIf="submitted && loginf.name.errors" class="invalid-feedback">
+              <div *ngIf="loginf.name.errors.required">First Name is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="alterEgo">Password</label>
+          <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && loginf.password.errors }" />
+          <div *ngIf="submitted && loginf.password.errors" class="invalid-feedback">
+              <div *ngIf="loginf.password.errors.required">Password is required</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success" >Submit</button>
+      </form>
+  <form (ngSubmit)="onSubmitlogin()" [formGroup]="loginForm" class="col-lg-5 col-md-12 col-sm-12 col-xs-12 col-lg-offset-2" *ngIf="false" >
+    <ion-item >
+      <ion-label for="name">User Name</ion-label>
+      <ion-input type="text" formControlName="name" ></ion-input>
+      <div class="clearfix">
+      </div>
+    <br/>
+      <ion-label *ngIf="submitted && loginf.name.errors" class="invalid-feedback">
+          <ion-label *ngIf="loginf.name.errors.required">First Name is required</ion-label>
+      </ion-label>
+    </ion-item>
+    <ion-item >
+      <ion-label for="alterEgo">Password</ion-label>
+      <ion-input type="text" formControlName="password" ></ion-input>
+      <br>
+      <div class="clearfix">
+      </div>
+      <ion-label *ngIf="submitted && loginf.password.errors" class="invalid-feedback">
+          <ion-label *ngIf="loginf.password.errors.required">Password is required</ion-label>
+      </ion-label>
+    </ion-item>    
+    <br>
+    <button  ion-button type="submit" class="btn btn-success" >Submit</button>
+  </form>
+  <ion-item id = "login_wrapper" *ngIf="!ionicblank"> 
+    <section class="login_container">
+        <div class="login">
+            <img src="./../../assets/images/thirdleap_icon.png"/>
+            <div class="social-wrap a row">
+                <ion-button color="primary col-lg-12"  expand="block" id="facebook" >Sign in with Facebook<ion-icon item-right name="logo-facebook"></ion-icon></ion-button>
+                <ion-button col-6  color="primary col-lg-12"  expand="block" id="googleplus" >Sign in with Google</ion-button>
+           </div>
+            <div class="separator_line"><span class="separator_or_text">or</span></div>
+        <h1>Sign in with your Thirdleap Math account</h1>
+        <form (ngSubmit)="onSubmitlogin()" [formGroup]="loginForm" >
+          <ion-list>
+            <ion-item>
+                <ion-label position="stacked" color="primary">Username</ion-label>
+                <ion-input  formControlName="name" type="text">
+                </ion-input>
+                <ion-label *ngIf="submitted && loginf.name.errors" class="invalid-feedback">
+                  <ion-label *ngIf="loginf.name.errors.required">First Name is required</ion-label>
+              </ion-label>
+            </ion-item>
+  
+            <ion-item>
+                <ion-label position="stacked"  color="primary">Password</ion-label>
+                <ion-input formControlName="password" type="password">
+                </ion-input>
+                <ion-label *ngIf="submitted && loginf.password.errors" class="invalid-feedback">
+                  <ion-label *ngIf="loginf.password.errors.required">Password is required</ion-label>
+              </ion-label>
+            </ion-item>
+  
+            <ion-row class="signin">
+              <ion-col>
+                  <ion-button color="primary"  type="submit" shape="full" expand="block">Sign In</ion-button>
+              </ion-col>
+          </ion-row>
+          </ion-list>
+        </form>
+        <div class="login-help">
+           <p><a id="frgt_pwd" href="javascript:void(0)">Forgot your password?</a> | <a  href="javascript:void(0)" id="signup" [routerLink]="['/registration']">Create new account.</a></p>
+        </div>
+        </div>
+    </section>
+</ion-item>
+  <ion-header *ngIf="false">
+    <ion-toolbar>
+      <ion-title>
+        Ionic Blank
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-row *ngIf="ionicblank">
+      <ion-col>
+      <ion-toolbar color="primary">
+          <ion-segment [(ngModel)]="viewMode" >
+            <ion-segment-button value="first" >
+              HomeWork 
+              <ion-icon name="book"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="second">
+               Learn
+               <ion-icon name="logo-youtube"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="third">
+               Practice 
+                <ion-icon name="create"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="third">
+                Assess
+                 <ion-icon name="laptop"></ion-icon>
+             </ion-segment-button>
+             <ion-segment-button value="third">
+              Progress 
+               <ion-icon name="map"></ion-icon>
+           </ion-segment-button>
+          </ion-segment>
+          
+        </ion-toolbar>
+        <ion-header no-border>
+          <ion-segment [(ngModel)]="typeofqus" (ionChange)=
+          "questiomnchange(typeofqus)">
+            <ion-segment-button value="athintsteps" >
+              AT_HINT_STEPS 
+              <ion-icon name="book"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="atsteps">
+              AT_STEPS
+               <ion-icon name="book"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="atwordprblms">
+              AT_WORD_PROBLEM_STEPS 
+                <ion-icon name="book"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="atmcsingle">
+              AT_MC_SINGLE
+                 <ion-icon name="book"></ion-icon>
+             </ion-segment-button>
+  
+          </ion-segment>
+        
+        </ion-header>
+      </ion-col>
+  </ion-row>
+  <ion-content padding *ngIf="ionicblank">
+      <ng-template [ngIf]="viewMode === 'first'">
+        Practice Tab
+        </ng-template>     
+    <ion-card *ngIf="false">
+      <ion-card-header>
+        <ion-card-subtitle>{{data1['country']}}</ion-card-subtitle>
+        <ion-card-title>{{data1['post code']}}</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content>
+        <ul>
+          <li *ngFor="let p of data1.places">{{p['place name']}}</li>
+        </ul>
+      </ion-card-content>
+    </ion-card>
+    <ion-card  *ngIf="false">
+      <ion-card-header>
+        <ion-card-subtitle>{{data2['country']}}</ion-card-subtitle>
+        <ion-card-title>{{data2['post code']}}</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content>
+        <ul>
+          <li *ngFor="let p of data2.places">{{p['place name']}}</li>
+        </ul>
+      </ion-card-content>
+    </ion-card>
+    <ion-card  *ngIf="false">
+      <ion-card-header>
+        <ion-card-subtitle>{{data3['country']}}</ion-card-subtitle>
+        <ion-card-title>{{data3['post code']}}</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content>
+        <ul>
+          <li *ngFor="let p of data3.places">{{p['place name']}}</li>
+        </ul>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-header  *ngIf="false">
+        <ion-card-subtitle>{{data4['country']}}</ion-card-subtitle>
+        <ion-card-title>{{data4['post code']}}</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content  *ngIf="false">
+        <ul>
+          <li *ngFor="let p of data4.places">{{p['place name']}}</li>
+        </ul>
+      </ion-card-content>
+      <ion-card-content>
+      <!-- <div class="math-element" id="equation" [mathJax]="thing">
+        </div> -->
+        <!-- <ng-katex [equation]="equationTexString" [options]="options"></ng-katex> -->
+<!-- {{autoManufacturers}} -->
+    <ion-row  class="quesbackcls">
+    <ion-col>
+      <ion-row class="math-element col-lg-12" [mathJax]="questionstring">
+      </ion-row>
+    </ion-col>
+  </ion-row>
+       <div *ngIf="answer_type==='AT_MC_SINGLE'|| answer_type==='atmcsingle'">
+        <div *ngFor="let enum of answerobject" >
+          <label name="map" for="enum_answer_{{enum.stepText}}">
+            <input id="enum_answer_{{enum.stepText}}" [value]='enum.stepText' type="radio" name="enums" [(ngModel)]="selectedItemradio">
+            {{enum.stepText}}
+          </label>
+        </div>
+       </div>
+       <ion-row>
+        <ion-col>
+          <div *ngIf="answer_type==='athintsteps' || answer_type==='atsteps'">
+                 <ion-item>
+                <ion-input type="text" [(ngModel)]="athintstepsinput"></ion-input>
+                  </ion-item>
+               <ion-row>
+                <ion-col class="pull-right">
+                    <ion-button float-right color="primary"  type="button" >Next Step</ion-button>
+                </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+       
+      <!-- <ion-list radio-group *ngFor="let location of locations">
+              <ion-item>
+            <ion-label>{{ location.name }}</ion-label>
+            <ion-radio  checked   [value]="location.name "></ion-radio>
+        </ion-item>
+    </ion-list> -->
+      
+
+        <ion-row>
+          <ion-col>
+              <ion-button (click)="ionicblank=!ionicblank" color="primary" >Back</ion-button>
+              <ion-button color="primary" >Next</ion-button>
+          </ion-col>
+        </ion-row>
+              </ion-card-content>
+    </ion-card>
+  </ion-content>
+  <ion-content>
+      <ion-item col>
+            <ion-label>
+            </ion-label>
+      </ion-item>
+       </ion-content>
+  <div id = "login_wrapper" *ngIf="false"> 
+      <section class="login_container">
+          <div class="login">
+              <img src="../../assets/images/thirdleap_icon.png"/>
+              <div class="social-wrap a">
+                  <button id="facebook">Sign in with Facebook</button>
+                  <button id="googleplus" >Sign in with Google</button>
+          </div>
+              <div class="separator_line"><span class="separator_or_text"><!-- react-text: 21 -->or<!-- /react-text --></span></div>
+          <h1>Sign in with your Thirdleap Math account</h1>
+          <form >
+              <p><input id = "first_name" type="email" class="validate" name="login" value="" placeholder="Username or Email"></p>
+              <p><input id = "password" type="password" name="password" value="" placeholder="Password"></p>
+              <p class="login_button"><input  type="button" name="commit" value="Login"></p>
+          </form>
+          <div class="login-help">
+          <p><a id = "frgt_pwd">Forgot your password?</a> | <a id = "signup">Create new account.</a></p>
+          </div>
+          </div>
+      </section>
+  </div>
+
+
+<ion-slides #signupSlider pager *ngIf="false">
+  
+    <ion-slide>
+   
+      <ion-list no-lines>
+   
+          <form [formGroup]="slideTwoForm">
+   
+              <ion-item>
+                  <ion-label floating>Username</ion-label>
+                  <ion-input [class.invalid]="!slideTwoForm.controls.username.valid && (slideTwoForm.controls.username.dirty || submitAttempt)" formControlName="username" type="text"></ion-input>
+              </ion-item>
+   
+              <ion-item *ngIf="slideTwoForm.controls.username.pending">
+                  <p>Checking username...</p>
+              </ion-item>
+   
+              <ion-item *ngIf="!slideTwoForm.controls.username.valid && !slideTwoForm.controls.username.pending && (slideTwoForm.controls.username.dirty || submitAttempt)">
+                  <p>Sorry, that username can not be used!</p>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label floating>Privacy</ion-label>
+                <ion-select (ionChange)="asd($event)" formControlName="privacy">
+                    <ion-select-option value="public" checked="true">Public</ion-select-option>
+                    <ion-select-option value="friends">Friends Only</ion-select-option>
+                    <ion-select-option value="private">Private</ion-select-option>
+                </ion-select>
+            </ion-item>
+   
+              <ion-item>
+                  <ion-label floating>Bio</ion-label>
+                  <ion-textarea formControlName="bio"></ion-textarea>
+              </ion-item>
+   
+          </form>
+   
+      </ion-list>
+   
+      <button ion-button full color="primary" (click)="save()">Create Account!</button>
+   
+    </ion-slide>
+   
+  </ion-slides>
+</ion-content>
