@@ -48,13 +48,14 @@
     "ionic-angular": "^3.9.2",
     "jquery": "^3.3.1",
     "long": "^4.0.0",
+    "mathquill-typescript": "^2.0.9",
     "ng-katex": "^1.0.3",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/architect": "~0.10.0",
-    "@angular-devkit/build-angular": "~0.10.0",
+    "@angular-devkit/build-angular": "^0.11.4",
     "@angular-devkit/core": "~7.0.0",
     "@angular-devkit/schematics": "~7.0.0",
     "@angular/cli": "~7.0.0",
@@ -92,9 +93,9 @@
       "com-badrit-base64": {}
     },
     "platforms": [
-      "android",
       "ios",
-      "windows"
+      "windows",
+      "android"
     ]
   }
 }

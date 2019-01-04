@@ -35,3 +35,67 @@
     }
  
 }
+.googleplusicon{
+    height: 32px;
+    width: 49px;
+    color: #f04040;
+}
+.facebookicon{
+    height: 32px;
+    width: 49px;
+    color:blue;
+}
+// ::ng-deep .card-content-md p{
+//     float: left !important;
+// }
+// ::ng-deep p#s0 {
+//     float: left;
+// }
+
+::ng-deep #questionstring{
+    .mq-math-mode .mq-text-mode.mq-hasCursor{
+        box-shadow: unset !important;
+    }
+}
+::ng-deep #questionstring{
+    .mq-math-mode .mq-text-mode{
+        display: block !important;
+    }
+}
+// ::ng-deep #answer_labeldiv{
+//     .mq-math-mode .mq-text-mode{
+//         display: block !important;
+//     }
+// }
+::ng-deep #questionstring{
+     .mq-math-mode .mq-root-block, .mq-root-block{
+        white-space: unset !important;
+    }
+}
+
+::ng-deep #answer_labeldiv{
+    .mq-math-mode .mq-text-mode.mq-hasCursor{
+        box-shadow: unset !important;
+    }
+}
+
+::ng-deep #answer_labeldiv{
+     .mq-math-mode .mq-root-block, .mq-root-block{
+        white-space: unset !important;
+    }
+}
+::ng-deep #questionstring {
+    .mq-cursor{
+      display: none !important;
+      border-left: none !important; 
+    }
+
+}
+
+::ng-deep #answer_labeldiv {
+     .mq-cursor{
+        display: none !important;
+        border-left: none !important;
+    }
+
+} 

@@ -2,6 +2,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core';
+import {IMathQuill, MathQuillLoader} from 'mathquill-typescript';
 const apiUrl = "http://api.zippopotam.us/";
 import 'rxjs';
 import { map} from 'rxjs/operators';
@@ -10,8 +11,16 @@ import { map} from 'rxjs/operators';
 })
 export class LoginService {
   data:any;
-  constructor(public http: HttpClient) { 
-    
+  mqpromise: Promise<IMathQuill>;
+  constructor(public http: HttpClient) {  
+    this.mqpromise = new Promise(resolve => { 
+      let optionat:any ={};
+      optionat.mode='.min';
+      MathQuillLoader.loadMathQuill({}, (mq: IMathQuill) => {
+        resolve(mq);
+      });
+    });
+  
   }
   
   getData(): Observable<any> {

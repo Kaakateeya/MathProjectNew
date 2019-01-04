@@ -11,7 +11,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 // import { MathJaxDirective } from './directives/math-jax.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
   import {      
     MatButtonModule,      
     MatMenuModule,      
@@ -20,7 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatCardModule,      
     MatFormFieldModule,      
     MatInputModule,      
-    MatDatepickerModule,      
+    MatDatepickerModule,       
     MatNativeDateModule,      
     MatRadioModule,      
     MatSelectModule,      

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Login} from './login.interface';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MustMatch } from '../helpval/mismatch';
 import { LoginService } from '../login/login.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AngularDelegate } from '@ionic/angular';
 import { observable} from 'rxjs';
 import CryptoJS from 'crypto-js';
 import 'rxjs';
@@ -12,22 +12,40 @@ import { KatexOptions } from 'ng-katex';
 import * as ByteBuffer from "bytebuffer"
 import { DomSanitizer} from '@angular/platform-browser';
 import * as proto from '../../assets/js/proto.min.js';
+// import * as MQa from '../../assets/js/mathquill.js';
+import {MathQuillLoader} from 'mathquill-typescript';
+import * as $ from 'jquery';
+import {IMathQuill} from 'mathquill-typescript';
+import {MathquillEditorOptions} from './login.interface';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {  
-    typeofqus:any='';
-    answerobject:any=[];
-options: KatexOptions = {
+export class LoginPage implements OnInit { 
+    answersss='';
+    indexvalue=1;
+    questionanswers=[];
+    lengthanswer: number=0;
+    array:any=[];
+   options: MathquillEditorOptions;
+    mqI: IMathQuill; 
+    hintstepindex=0;     
+    @ViewChild('editableMath') editableMath: ElementRef;
+      latexSource: string;
+ @ViewChild('questiondiv') public questiondiv: ElementRef;
+ @ViewChild('answer_labeldiv') public answer_labeldiv: ElementRef;
+ typeofqus:any='';
+ answerobject:any=[];
+ optionss: KatexOptions = {
   displayMode: true,
 };
+answerimg:any='';
  identity = 'IdYCbkfXhMCkRRkfdAxDizXVRVTnFg5haKOMSp5eslet25+7ItW8W1F9/zjeIfs=';
-  loginForm: FormGroup;
-  selectedItemradio: any;
-  model = new Login('','');
- thing : any='';
+loginForm: FormGroup;
+selectedItemradio: any;
+model = new Login('','');
+thing : any='';
 data1: any=[];
 data2: any=[];
 data3: any=[];
@@ -55,30 +73,53 @@ hint_counter=0;
  autoManufacturers:any;
  questionstring: any='';
  athintsteps='';
- 
-  modes = { is_in_homework : false,is_in_learn : false, is_in_practice : false, is_in_assess : false, is_in_progress: false, is_in_review_mode: false };
+ modes = { is_in_homework : false,is_in_learn : false, is_in_practice : false, is_in_assess : false, is_in_progress: false, is_in_review_mode: false };
+ @ViewChild('answerdiv') public answerdiv:ElementRef;
 ////////
   categoriesView: any[]=[];
   categories:any[]=[];
   registerForm: FormGroup;
   submitted = false;
   private todo : FormGroup;
-    @ViewChild('signupSlider') signupSlider: any;
-   slideTwoForm: FormGroup;
-  equationTexString='\\sum_{i=1}^nx_i';
-    submitAttempt: boolean = false;
-  constructor( private formBuilder: FormBuilder , private __service: LoginService,public loadingController:LoadingController,
+  MQ:any={};
+ @ViewChild('signupSlider') signupSlider: any;
+slideTwoForm: FormGroup;
+equationTexString="\sum_{i=1}^nx_i";
+submitAttempt: boolean = false;
+answer_label='';  
+constructor( private formBuilder: FormBuilder , private __service: LoginService,public loadingController:LoadingController,
     public __Sanitizer:DomSanitizer)
-     {
-    ///
-
+    {  
+      
+    let optionat:any ={};
+    optionat.mode='.min';
+    MathQuillLoader.loadMathQuill({},mathquill=> {
+      console.log(mathquill.getInterface(2));
+      this.MQ=mathquill.getInterface(2);
+    });
     this.slideTwoForm = formBuilder.group({
       username: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z]*')])],
       privacy: ['', Validators.required],
       bio: ['']
   });
-   }
-   next(){
+  
+  __service.mqpromise.then((mq: IMathQuill) => {
+    this.mqI = mq.getInterface(2);
+  });
+  
+   } 
+//     clicked(insert: string) {
+//     this.mqI.MathField(this.editableMath.nativeElement).write(insert);
+//     this.refreshLatex();
+//   }
+
+//   refreshLatex() {
+//     const innerLatexMath = this.mqI.MathField(this.editableMath.nativeElement);
+//     const latex = innerLatexMath.latex();
+//     this.latexSource = latex;
+//   };
+
+ next(){
     this.signupSlider.slideNext();
 }
 
@@ -90,6 +131,7 @@ logForm(){
 }
 
   ngOnInit() {
+  
     this.loginForm = this.formBuilder.group({
       name: ['lakshmi', Validators.required],
       password: ['123456', [Validators.required, Validators.minLength(6)]]
@@ -108,7 +150,9 @@ logForm(){
     title: ['', Validators.required],
     description: [''],
   });
+
   }
+
   get f() { return this.registerForm.controls; }
   get loginf() { return this.loginForm.controls; }
   onSubmit() {
@@ -126,7 +170,6 @@ onSubmitlogin(){
       return;
   }
   this.ionicblank=true;
-  // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.loginForm.value));
   if(this.loginForm.value.name==='lakshmi' && this.loginForm.value.password==='123456'){
      this.getData();
      this.practicedata();
@@ -164,8 +207,7 @@ async getData() {
     });
 }
 save(){
- 
-  this.submitAttempt = true;
+   this.submitAttempt = true;
   if(!this.slideTwoForm.valid){
       this.signupSlider.slideTo(1);
   }
@@ -173,9 +215,7 @@ save(){
       console.log("success!")
       console.log(this.slideTwoForm.value);
   }
-
 }
-
 practicedata(){
   let obj={"V":"{\"userid\":\"2063569960389177\",\"grade\":\"8\",\"locale\":\"IN\",\"concept_key\":\"8/Pre-Algebra /Radicals And Integer Exponents/Multiply and Divide with Powers of Ten\",\"problem_level\":\"6\"}","K":"03d08307-82bc-47fb-a93e-9ae74c29554a","H":"a7336471db39f014323e7436e2e078626e8f6dcd57d50f4d72f0a9c6908efd84","C":1000};
   this.__service.getPracticeData(obj).subscribe(res =>{
@@ -189,16 +229,13 @@ practicedata(){
     let data:any={};
     if (response.V === "") return null;
     if (this.hmac_sha256(response.V, response.K) == response.H) {
-      debugger;
      this.thing=atob(response.V);
       var base64 =response.V;
       let buf = this.base64ToBuffer(base64);
       let arr = Array.prototype.slice.call(buf);
-      debugger;
       data=(proto.brain.ProblemDBBatchView.decode(arr));
-      console.log(data); 
-    //   this.thing = data.rows;
-    this.getanswerandqueastions(data.rows[0]);
+      // this.thing = data.rows;
+      this.getanswerandqueastions(data.rows[0]);
       console.log(data);
     }
   } catch (err) {
@@ -206,9 +243,7 @@ practicedata(){
   }
   return null;
 }
-
-
- hmac_sha256 (input_string, key_string) {
+ hmac_sha256(input_string, key_string) {
   try {
     console.log(CryptoJS.HmacSHA256(input_string, this.identity + key_string).toString());
     return CryptoJS.HmacSHA256(input_string, this.identity + key_string).toString();
@@ -216,121 +251,25 @@ practicedata(){
     console.log(err);
   }
 }
-
 asd(event){
   console.log(event);
 }
 
 /***************************** */
-getStatement(statement) {
-    var possibilities = { "E": 0, "F": 1, "B": 2, "M": 3 };
-    var local_statement = "";
-    statement.formated = statement.formated.replace(/\\text{}/g, "");
-    for (var pos = 0; pos < statement.formated.length; pos++) {
-        if (statement.formated.charAt(pos) == "?") {
-            pos++;
-            var possibility;
-            if (pos < statement.formated.length)
-                possibility = possibilities[statement.formated.charAt(pos)];
-            if (possibility != undefined) {
-                pos++;
-                if (possibility == 3) { 
-                    // replacing multiple choice
-                    local_statement += "_________";
-                } else { 
-                    // replacing the rest
-                    var num_str = "";
-                    for (; !isNaN(parseInt(statement.formated.charAt(pos))); pos++) {
-                        num_str += statement.formated.charAt(pos);
-                    }
-                    // var is_complete = (statement.formated.charAt(pos) == '}');
-                    var is_complete = (statement.formated.length == pos);
-                    if (!is_complete) pos--;
-                    switch (possibility) {
-                        case 0:
-                            // if (is_complete) {
-                            //     local_statement += "}" + statement.expression[num_str];
-                            // } else {
-                            //     local_statement += "}" + statement.expression[num_str] + "\\text{"
-                            // }
-                            local_statement += "$$ " + statement.expression[num_str] + "$$";
-                            break;
-                        case 1:
-                            if (is_complete)
-                                // local_statement += "}";
-                                local_statement += " $$";
-                            break;
-                        case 2:
-                            if (is_complete)
-                                local_statement += "_________";
-                            else
-                                local_statement += "_________";
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            } else {
-                local_statement += "?";
-                pos--;
-            }
-        } else {
-            local_statement += statement.formated.charAt(pos);
-        }
-    }
-    return local_statement;
-}
- writeQuestionAssess(questionString) {
- 
-}
- writeQuestionWithMathML_practice(element, statement) {
-  
-    
-}
- writeQuestion(question_string) {
-
-    this.writeQuestionWithMathML_practice("question", question_string);
-
-}
- draw_geometry_figure(figure, figure_div_id, board_id, is_geo_option) {
-
-}
- draw_geometry_graph(figure, figure_div_id, board_id, is_geo_option) {   
-   
-}
-writeQuestionStatement(statement) {
-    let question_string='';
-   if (statement.figure.length === 0 && this.modes.is_in_practice)
-       ///clearAnswerPart(); bbhh
-    question_string = this.getStatement(statement);
-   if(this.modes.is_in_assess && !this.modes.is_in_review_mode)
-       this.writeQuestionAssess(question_string);
-   else
-       this.writeQuestion(question_string);
-   for (var i = 0; i < statement.figure.length; i++) {
-       this.draw_geometry_figure(statement.figure[i], "geometry_question", "board",undefined);
-       // TODO : to add multiple figure support
-   }
-   if(statement.graph != null) {
-       this.draw_geometry_graph(statement.graph, "geometry_question", "board",undefined);
-       // TODO : to add multiple figure support
-   }
-}
-
 getanswerandqueastions(problem_db_item){
-    debugger;
+    this.loadimageurl();
     this.answer_type=problem_db_item.solutions.answer_type;
-    // this.writeQuestionStatement(problem_db_item.problem.statement_problem);
-
-    switch(problem_db_item.solutions.answer_type){
-        case 'AT_STEPS': 
+      switch(problem_db_item.solutions.answer_type){
+        case 'AT_STEPS':       
         this.questionstring=problem_db_item.problem.statement_problem.formated+""+problem_db_item.problem.statement_problem.expression[0];
         this.log_problem_id = problem_db_item.key;
+        this.questionBindHtml('ques');
         break;
         case 'AT_MC_SINGLE': 
         this.questionstring=problem_db_item.problem.mc_problem.mc_statement.formated;
         this.log_problem_id = problem_db_item.key;
        this.answerobject=problem_db_item.problem.mc_problem.option;
+       this.questionBindHtml('ques');
         break;
         case 'AT_MC_MULTIPLE': 
         break;
@@ -347,6 +286,18 @@ getanswerandqueastions(problem_db_item){
     console.log("getQuestionForPracticeMode " + this.answer_type);
 }
 questiomnchange(typeques){
+    var mathFieldSpanss = document.getElementById('math-field');
+    var mathFielda = this.MQ.MathField(mathFieldSpanss, {
+        spaceBehavesLikeTab: true,
+        handlers: {
+          edit: function() {
+            mathFielda.focus();
+          }
+        }
+      });
+    $("#answer_labeldiv").empty();
+    this.indexvalue=1;
+    this.loadimageurl();
     let data =[];
     this.answer_type=typeques;
     switch(typeques){
@@ -354,14 +305,14 @@ questiomnchange(typeques){
          data= 
             [{ "question" : { "questionText" : "\\text{Shyam left a <p id=s0>container of flour weighing 5 kg</p> in the kitchen.  If <p id=s1>342 g of flour was eaten</p>, how many grams of flour is left in the container?}" }, "solution" : [ { "step" : [ { "stepId" : 0, "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{The amount of flour left over in the container is? ?B0 g}" }, "answers" : [ "4658" ] } }, { "hintStep" : [ { "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{How much does the container of flour weigh? ?B0 kg}" }, "answers" : [ "5" ] } }, { "plainStep" : { "stepText" : "\\text{As the weight of the flour in the container is in kg and the amount of flour left over is in g, let's convert kg to g.}" } }, { "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{1 kg is how many g? ?B0}" }, "answers" : [ "1000" ] } }, { "plainStep" : { "stepText" : "\\text{To convert 5 kg to grams, multiply 5 with the conversion factor, which is 5 * 1000}" } }, { "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{So, 5 kg is ?B0 g}" }, "answers" : [ "5000" ] } }, { "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{How many grams of flour was eaten? ?B0 g}" }, "answers" : [ "342" ] } } ], "stepId" : 1, "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{Now, calculate the amount of flour left in the container. It is ?B0 g}" }, "answers" : [ "4658" ] } }, { "hintStep" : [ { "plainStep" : { "stepText" : "\\text{To get the amount of flour left over, subtract the quantity eaten from the original quantity. It is, 5000 - 342}" } } ], "stepId" : 2, "fillInBlanks" : { "fillUpData" : { "stepText" : "\\text{So, the amount of flour left in the container is ?B0 g}" }, "answers" : [ "4658" ] } } ] } ], "source" : { "questionSource" : "RD SHARMA", "validatedBy" : "templates", "enteredBy" : "thirdleap_templates" }, "answerType" : "AT_HINT_STEPS", "template" : { "templateKey" : 2, "enteredThrough" : "UI" }, "problemId" : "3", "subject" : [ { "firstAttemptPercentage" : 0, "grade" : 4, "numOfTimesAttempted" : 0, "curriculum" : "CBSE", "syllabus" : { "category" : "Unit Conversions", "concept" : "Add and Subtract Mass", "area" : "Measurement and Data" }, "avgTimeSpent" : 0, "importantExam" : "" } ] }
             ];
-
          console.log(data);
          this.questionstring=data[0].question.questionText;
-         if(this.questionstring.indexOf('\\text{')!==-1){
-            this.questionstring=this.questionstring.replace('\\text{','');
-         }
-        this.log_problem_id = data[0].problemId;
-        this.answerobject=data[0].solution[0].step;
+         this.log_problem_id = data[0].problemId;
+         this.answerobject=data[0].solution[0].step;
+        this.answer_label=data[0].solution[0].step[0].fillInBlanks.fillUpData.stepText;
+         this.lengthanswer=this.answerobject.length;
+         this.questionBindHtml('ques');
+         this.questionBindHtml('ans');
         break;
         case 'atsteps':
          data=[  
@@ -370,11 +321,11 @@ questiomnchange(typeques){
          ];
          console.log(data);
          this.questionstring=data[0].question.questionText;
-         if(this.questionstring.indexOf('\\text{')!==-1){
-            this.questionstring=this.questionstring.replace('\\text{','');
-         }
          this.log_problem_id = data[0].problemId;
          this.answerobject=data[0].solution[0].step;
+         this.answer_label=data[0].solution[0].step[0].plainStep.stepText;
+         this.questionBindHtml('ques');
+         this.questionBindHtml('ans');
         break;
         case 'atwordprblms':
          data=[
@@ -382,25 +333,188 @@ questiomnchange(typeques){
             ];
             console.log(data);
             this.questionstring=data[0].question.questionText;
-            if(this.questionstring.indexOf('\\text{')!==-1){
-                this.questionstring=this.questionstring.replace('\\text{','');
-             }
             this.log_problem_id = data[0].problemId;
             this.answerobject=data[0].solution[0].step;
+            this.answer_label=data[0].solution[0].step[0].plainStep.stepText;
+            this.questionBindHtml('ques');
+            this.questionBindHtml('ans');
         break;
-     
         case 'atmcsingle':
         case 'AT_MC_SINGLE':
         data=[{  "question" : { "questionText" : "\\text{Choose an option to fill in the blank: -4 + _________ = 0}" }, "solution" : [ { "step" : [ { "mcqOptions" : { "optionData" : [ { "stepText" : "4" }, { "stepText" : "-4" }, { "stepText" : "0" } ] } } ] } ], "source" : { "questionSource" : "RD SHARMA", "validatedBy" : "templates", "enteredBy" : "thirdleap_templates" }, "answerType" : "AT_MC_SINGLE", "template" : { "templateKey" : 11, "enteredThrough" : "UI" }, "problemId" : "2", "subject" : [ { "firstAttemptPercentage" : 0, "grade" : 6, "numOfTimesAttempted" : 0, "curriculum" : "CBSE", "syllabus" : { "category" : "Integers", "concept" : "Add Integers", "area" : "Numbers And Operations" }, "avgTimeSpent" : 0, "importantExam" : "" } ] }];
          console.log(data);
          this.questionstring=data[0].question.questionText;
-         if(this.questionstring.indexOf('\\text{')!==-1){
-            this.questionstring=this.questionstring.replace('\\text{','');
-         }
-         this.log_problem_id = data[0].problemId;
-         this.answerobject=data[0].solution[0].step[0].mcqOptions.optionData;
+        this.log_problem_id = data[0].problemId;
+        this.answerobject=data[0].solution[0].step[0].mcqOptions.optionData;
+        let answers=data[0].solution[0].step[0].mcqOptions.optionData;
+        // this.answerobject='<div *ngFor="let enum of answers" ><label name="map" for="enum_answer_{{enum.stepText}}"><input id="enum_answer_{{enum.stepText}}" [value]="enum.stepText" type="radio" name="enums" [(ngModel)]="selectedItemradio">{{enum.stepText}}</label></div>';
+        // this.mqI.StaticMath(this.answerdiv.nativeElement).latex(this.answerobject);
+        // const innerLatexMath = this.mqI.StaticMath(this.answerdiv.nativeElement).latex(this.answerobject);
+        // innerLatexMath.latex();
+        this.answer_label='';
+        this.questionBindHtml('ques');
+        this.questionBindHtml('ans');
+        break;
+        case 'atgraphs':
+        this.loadimageurl();
+        this.answer_label='';
+        this.questionBindHtml('ans');
         break;
      
     }
 }
+questionBindHtml(type){
+    if(type=='ques'){
+        let problemSpana = document.getElementById('questionstring');
+        var mathField =  this.MQ.MathField(problemSpana, {
+           spaceBehavesLikeTab: false, // configurable
+           leftRightIntoCmdGoes: 'up',
+           restrictMismatchedBrackets: true,
+           sumStartsWithNEquals: true,
+           supSubsRequireOperand: true,
+           charsThatBreakOutOfSupSub: '+-=<>',
+           autoSubscriptNumerals: true,
+           autoCommands: 'pi theta sqrt sum',
+           autoOperatorNames: 'sin cos',
+           redraw:false,
+           substituteTextarea: function() {
+             return document.createElement('div');
+           }
+         });
+        // mathField.latex(this.questionstring);
+        // mathField.latex(); 
+     
+        // const innerLatexMath = this.mqI.StaticMath(this.questiondiv.nativeElement).latex(this.questionstring);
+        // innerLatexMath.latex();
+  
+        $( "#questionstring" ).html(this.questionstring);
+         var problemSpan = document.getElementById('questionstring');
+        this.MQ.StaticMath(problemSpan);
+    }
+    else{
+        this.questionanswers.push(this.answer_label);
+        debugger;
+        let problemSpana = document.getElementById('answer_labeldiv');
+        var mathFieldS =  this.MQ.MathField(problemSpana, {
+           spaceBehavesLikeTab: false, // configurable
+           leftRightIntoCmdGoes: 'up',
+           restrictMismatchedBrackets: true,
+           sumStartsWithNEquals: true,
+           supSubsRequireOperand: true,
+           charsThatBreakOutOfSupSub: '+-=<>',
+           autoSubscriptNumerals: true,
+           autoCommands: 'pi theta sqrt sum',
+           autoOperatorNames: 'sin cos', 
+           redraw:false,
+           substituteTextarea: function() {
+             return document.createElement('div'); 
+           }
+         });
+        // mathField.write(this.answer_label);
+        // mathField.latex(); 
+        
+        this.answer_label=this.answer_label.replace('?B0' , '____');
+        // const innerLatexMath = this.mqI.MathField(document.getElementById('answer_labeldiv')).latex(""+this.answer_label);
+        // innerLatexMath.latex();
+         var mathFieldSpans = $('<p>'+this.answer_label+'</p>');
+        var mathFields = this.mqI.StaticMath(mathFieldSpans[0]);
+        mathFieldSpans.appendTo(document.getElementById('answer_labeldiv'));
+        mathFields.reflow();
+        $('<br>').appendTo(document.getElementById('answer_labeldiv'));
+    }
+   
+}
+loadimageurl(){
+    let url='../../assets/images/ec_piechart_status.png';
+    const loadBase64Image = (url) => fetch(url)
+  .then(response => response.blob())
+  .then(base64Data => {
+    let reader = new FileReader()
+    reader.onloadend = () => { 
+    this.answerimg=reader.result;
+    }
+    reader.onerror = (e) => console.error(e);
+    reader.readAsDataURL(base64Data)
+  });
+  loadBase64Image(url);
+}
+nexthintbtn(){
+       switch(this.answer_type){
+        case 'athintsteps':
+         this.commonhintsteps();
+        break;
+        case 'atsteps':
+        if(this.indexvalue<this.answerobject.length){
+        this.answer_label=this.answerobject[this.indexvalue].plainStep.stepText; 
+        this.indexvalue=this.indexvalue+1;
+        this.questionBindHtml('ans');
+        }
+        // this.commonhintsteps();
+        break;
+        case 'atwordprblms':
+        if(this.indexvalue<this.answerobject.length){
+            this.answer_label=this.answerobject[this.indexvalue].plainStep.stepText; 
+            this.indexvalue=this.indexvalue+1;
+            this.questionBindHtml('ans');
+            }
+        // this.commonhintsteps();
+        break;
+        case 'atmcsingle':
+        case 'AT_MC_SINGLE':
+        this.questionBindHtml('ques');
+        break;
+         }
+}
+ commonhintsteps(){
+    // $( "#answer_labeldiv").html().replace('____', this.answersss+'<label class="fb_card">____</label>');
+    if(this.indexvalue<this.answerobject.length){
+        if(this.answerobject[this.indexvalue].hintStep!==undefined && this.answerobject[this.indexvalue].hintStep.length>0){
+         if(this.hintstepindex<this.answerobject[this.indexvalue].hintStep.length)
+         {
+         if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks!==undefined){
+            this.answer_label=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.fillUpData.stepText;
+            this.answersss=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.answers[0];
+           this.questionBindHtml('ans');
+           this.hintstepindex=this.hintstepindex+1;
+
+         }
+         else if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex].plainStep!==undefined){
+             this.answer_label=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].plainStep.stepText;
+             this.hintstepindex=this.hintstepindex+1;
+             this.questionBindHtml('ans');
+             debugger;
+             if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex]!==undefined && this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks!==undefined){
+                 this.answer_label=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.fillUpData.stepText;
+                 this.answersss=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.answers[0];
+                 this.questionBindHtml('ans');
+                 this.hintstepindex=this.hintstepindex+1;
+             }
+             else if(this.answerobject[this.indexvalue].fillInBlanks!==undefined){
+                 this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText;
+                 this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
+                 this.questionBindHtml('ans');
+                 this.indexvalue=this.indexvalue+1;
+                 this.hintstepindex=this.hintstepindex+1;
+             }
+          }
+          
+         }    
+         else{
+             this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText; 
+             this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
+             this.indexvalue=this.indexvalue+1;
+             this.questionBindHtml('ans');
+             this.hintstepindex=0;
+         }
+        }
+        else{
+       
+         this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText; 
+         this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
+         this.indexvalue=this.indexvalue+1;
+         this.questionBindHtml('ans');
+         this.hintstepindex=0;
+        }
+     }
+ }
 }

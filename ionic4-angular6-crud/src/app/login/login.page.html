@@ -50,8 +50,10 @@
         <div class="login">
             <img src="./../../assets/images/thirdleap_icon.png"/>
             <div class="social-wrap a row">
-                <ion-button color="primary col-lg-12"  expand="block" id="facebook" >Sign in with Facebook<ion-icon item-right name="logo-facebook"></ion-icon></ion-button>
-                <ion-button col-6  color="primary col-lg-12"  expand="block" id="googleplus" >Sign in with Google</ion-button>
+                <ion-button color="primary col-lg-12"  expand="block" id="facebook" >Sign in with Facebook<ion-icon class="facebookicon" item-right name="logo-facebook"></ion-icon></ion-button>
+                <ion-button col-6  color="primary col-lg-12"  expand="block" id="googleplus" >Sign in with Google
+                    <ion-icon  item-right class="googleplusicon"  ios="logo-googleplus" md="logo-googleplus"></ion-icon>
+                </ion-button>
            </div>
             <div class="separator_line"><span class="separator_or_text">or</span></div>
         <h1>Sign in with your Thirdleap Math account</h1>
@@ -74,8 +76,7 @@
                   <ion-label *ngIf="loginf.password.errors.required">Password is required</ion-label>
               </ion-label>
             </ion-item>
-  
-            <ion-row class="signin">
+              <ion-row class="signin">
               <ion-col>
                   <ion-button color="primary"  type="submit" shape="full" expand="block">Sign In</ion-button>
               </ion-col>
@@ -120,8 +121,7 @@
                <ion-icon name="map"></ion-icon>
            </ion-segment-button>
           </ion-segment>
-          
-        </ion-toolbar>
+                  </ion-toolbar>
         <ion-header no-border>
           <ion-segment [(ngModel)]="typeofqus" (ionChange)=
           "questiomnchange(typeofqus)">
@@ -141,10 +141,12 @@
               AT_MC_SINGLE
                  <ion-icon name="book"></ion-icon>
              </ion-segment-button>
-  
+             <ion-segment-button value="atgraphs">
+                AT_GRAPHS
+                   <ion-icon name="book"></ion-icon>
+               </ion-segment-button>
           </ion-segment>
-        
-        </ion-header>
+                </ion-header>
       </ion-col>
   </ion-row>
   <ion-content padding *ngIf="ionicblank">
@@ -156,8 +158,7 @@
         <ion-card-subtitle>{{data1['country']}}</ion-card-subtitle>
         <ion-card-title>{{data1['post code']}}</ion-card-title>
       </ion-card-header>
-  
-      <ion-card-content>
+        <ion-card-content>
         <ul>
           <li *ngFor="let p of data1.places">{{p['place name']}}</li>
         </ul>
@@ -168,8 +169,7 @@
         <ion-card-subtitle>{{data2['country']}}</ion-card-subtitle>
         <ion-card-title>{{data2['post code']}}</ion-card-title>
       </ion-card-header>
-  
-      <ion-card-content>
+        <ion-card-content>
         <ul>
           <li *ngFor="let p of data2.places">{{p['place name']}}</li>
         </ul>
@@ -180,8 +180,7 @@
         <ion-card-subtitle>{{data3['country']}}</ion-card-subtitle>
         <ion-card-title>{{data3['post code']}}</ion-card-title>
       </ion-card-header>
-  
-      <ion-card-content>
+        <ion-card-content>
         <ul>
           <li *ngFor="let p of data3.places">{{p['place name']}}</li>
         </ul>
@@ -192,8 +191,7 @@
         <ion-card-subtitle>{{data4['country']}}</ion-card-subtitle>
         <ion-card-title>{{data4['post code']}}</ion-card-title>
       </ion-card-header>
-  
-      <ion-card-content  *ngIf="false">
+        <ion-card-content  *ngIf="false">
         <ul>
           <li *ngFor="let p of data4.places">{{p['place name']}}</li>
         </ul>
@@ -201,49 +199,62 @@
       <ion-card-content>
       <!-- <div class="math-element" id="equation" [mathJax]="thing">
         </div> -->
-        <!-- <ng-katex [equation]="equationTexString" [options]="options"></ng-katex> -->
-<!-- {{autoManufacturers}} -->
-    <ion-row  class="quesbackcls">
+          <ion-row  class="quesbackcls"> 
     <ion-col>
-      <ion-row class="math-element col-lg-12" [mathJax]="questionstring">
-      </ion-row>
+        <!-- <ng-katex [equation]="equationTexString" [options]="options">{{equationTexString}}</ng-katex> -->
+      <!-- <div class="math-element col-lg-12" [mathJax]="questionstring">
+      </div> -->
+      <span class="col-lg-12" id="questionstring"  style="float: left;
+      font-size: 10px;" #questiondiv >
+     
+    </span>
+      
+       <div [hidden]="answer_type!=='atgraphs'"><img [src]="answerimg" style="height: 202px;
+        width: 361px;"/></div>
     </ion-col>
   </ion-row>
        <div *ngIf="answer_type==='AT_MC_SINGLE'|| answer_type==='atmcsingle'">
-        <div *ngFor="let enum of answerobject" >
+        <!-- <div *ngFor="let enum of answerobject" >
           <label name="map" for="enum_answer_{{enum.stepText}}">
             <input id="enum_answer_{{enum.stepText}}" [value]='enum.stepText' type="radio" name="enums" [(ngModel)]="selectedItemradio">
             {{enum.stepText}}
           </label>
-        </div>
+        </div> -->
+      <ion-radio-group>
+         <ion-item *ngFor="let entry of answerobject" >
+            <ion-label>{{entry.stepText}}</ion-label>
+            <ion-radio slot="start" ></ion-radio>
+          </ion-item>
+        </ion-radio-group>
        </div>
        <ion-row>
         <ion-col>
-          <div *ngIf="answer_type==='athintsteps' || answer_type==='atsteps'">
-                 <ion-item>
-                <ion-input type="text" [(ngModel)]="athintstepsinput"></ion-input>
+          <div >
+                 <ion-item class="row"> 
+                    <p class="col-lg-12" id="answer_labeldiv" ></p>
+
+                 
+                    <!-- <div  id="answer_labeldiv"  *ngFor="let answer of questionanswers">
+                        <span class="answers">{{answer}}</span>
+                    </div> -->
+                  
+                    <input  class="col-lg-2" type="text" [(ngModel)]="athintstepsinput" id="keywordtxt"/>
                   </ion-item>
                <ion-row>
                 <ion-col class="pull-right">
-                    <ion-button float-right color="primary"  type="button" >Next Step</ion-button>
+                    <ion-button float-right color="primary"  type="button" (click)="nexthintbtn()">HINT</ion-button>
                 </ion-col>
             </ion-row>
           </div>
         </ion-col>
       </ion-row>
-       
-      <!-- <ion-list radio-group *ngFor="let location of locations">
-              <ion-item>
-            <ion-label>{{ location.name }}</ion-label>
-            <ion-radio  checked   [value]="location.name "></ion-radio>
-        </ion-item>
-    </ion-list> -->
-      
 
         <ion-row>
           <ion-col>
+              <span id="math-field" style="width:100px"></span>
               <ion-button (click)="ionicblank=!ionicblank" color="primary" >Back</ion-button>
               <ion-button color="primary" >Next</ion-button>
+             
           </ion-col>
         </ion-row>
               </ion-card-content>
@@ -276,30 +287,21 @@
           </div>
       </section>
   </div>
-
-
 <ion-slides #signupSlider pager *ngIf="false">
-  
-    <ion-slide>
-   
-      <ion-list no-lines>
-   
-          <form [formGroup]="slideTwoForm">
-   
-              <ion-item>
+      <ion-slide>
+         <ion-list no-lines>
+             <form [formGroup]="slideTwoForm">
+                 <ion-item>
                   <ion-label floating>Username</ion-label>
                   <ion-input [class.invalid]="!slideTwoForm.controls.username.valid && (slideTwoForm.controls.username.dirty || submitAttempt)" formControlName="username" type="text"></ion-input>
               </ion-item>
-   
-              <ion-item *ngIf="slideTwoForm.controls.username.pending">
+                 <ion-item *ngIf="slideTwoForm.controls.username.pending">
                   <p>Checking username...</p>
               </ion-item>
-   
-              <ion-item *ngIf="!slideTwoForm.controls.username.valid && !slideTwoForm.controls.username.pending && (slideTwoForm.controls.username.dirty || submitAttempt)">
+                 <ion-item *ngIf="!slideTwoForm.controls.username.valid && !slideTwoForm.controls.username.pending && (slideTwoForm.controls.username.dirty || submitAttempt)">
                   <p>Sorry, that username can not be used!</p>
               </ion-item>
-      
-              <ion-item>
+                    <ion-item>
                 <ion-label floating>Privacy</ion-label>
                 <ion-select (ionChange)="asd($event)" formControlName="privacy">
                     <ion-select-option value="public" checked="true">Public</ion-select-option>
@@ -307,19 +309,13 @@
                     <ion-select-option value="private">Private</ion-select-option>
                 </ion-select>
             </ion-item>
-   
-              <ion-item>
+                 <ion-item>
                   <ion-label floating>Bio</ion-label>
                   <ion-textarea formControlName="bio"></ion-textarea>
               </ion-item>
-   
-          </form>
-   
-      </ion-list>
-   
-      <button ion-button full color="primary" (click)="save()">Create Account!</button>
-   
-    </ion-slide>
-   
-  </ion-slides>
+             </form>
+         </ion-list>
+         <button ion-button full color="primary" (click)="save()">Create Account!</button>
+       </ion-slide>
+     </ion-slides>
 </ion-content>
