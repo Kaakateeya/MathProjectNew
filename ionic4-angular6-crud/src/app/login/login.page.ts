@@ -9,7 +9,7 @@ import { observable} from 'rxjs';
 import CryptoJS from 'crypto-js';
 import 'rxjs';
 import { KatexOptions } from 'ng-katex';
-import * as ByteBuffer from "bytebuffer"
+import * as ByteBuffer from 'bytebuffer';
 import { DomSanitizer} from '@angular/platform-browser';
 import * as proto from '../../assets/js/proto.min.js';
 // import * as MQa from '../../assets/js/mathquill.js';
@@ -30,7 +30,8 @@ export class LoginPage implements OnInit {
     array:any=[];
    options: MathquillEditorOptions;
     mqI: IMathQuill; 
-    hintstepindex=0;     
+    hintstepindex=0;
+    answerarray:any[]=[];
     @ViewChild('editableMath') editableMath: ElementRef;
       latexSource: string;
  @ViewChild('questiondiv') public questiondiv: ElementRef;
@@ -413,14 +414,16 @@ questionBindHtml(type){
         // mathField.write(this.answer_label);
         // mathField.latex(); 
         
-        this.answer_label=this.answer_label.replace('?B0' , '____');
+        this.answer_label= this.answer_label.replace('?B0' , '____');
         // const innerLatexMath = this.mqI.MathField(document.getElementById('answer_labeldiv')).latex(""+this.answer_label);
         // innerLatexMath.latex();
-         var mathFieldSpans = $('<p>'+this.answer_label+'</p>');
-        var mathFields = this.mqI.StaticMath(mathFieldSpans[0]);
+
+         let mathFieldSpans = $('<p>'+this.answer_label+'</p>');
+        let mathFields = this.mqI.StaticMath(mathFieldSpans[0]);
         mathFieldSpans.appendTo(document.getElementById('answer_labeldiv'));
         mathFields.reflow();
         $('<br>').appendTo(document.getElementById('answer_labeldiv'));
+
     }
    
 }
@@ -444,16 +447,16 @@ nexthintbtn(){
          this.commonhintsteps();
         break;
         case 'atsteps':
-        if(this.indexvalue<this.answerobject.length){
-        this.answer_label=this.answerobject[this.indexvalue].plainStep.stepText; 
-        this.indexvalue=this.indexvalue+1;
+        if(this.indexvalue < this.answerobject.length) {
+        this.answer_label = this.answerobject[this.indexvalue].plainStep.stepText;
+        this.indexvalue = this.indexvalue + 1;
         this.questionBindHtml('ans');
         }
         // this.commonhintsteps();
         break;
         case 'atwordprblms':
-        if(this.indexvalue<this.answerobject.length){
-            this.answer_label=this.answerobject[this.indexvalue].plainStep.stepText; 
+        if(this.indexvalue<this.answerobject.length) {
+            this.answer_label=this.answerobject[this.indexvalue].plainStep.stepText;
             this.indexvalue=this.indexvalue+1;
             this.questionBindHtml('ans');
             }
@@ -465,52 +468,53 @@ nexthintbtn(){
         break;
          }
 }
- commonhintsteps(){
+ commonhintsteps() {
     // $( "#answer_labeldiv").html().replace('____', this.answersss+'<label class="fb_card">____</label>');
-    if(this.indexvalue<this.answerobject.length){
-        if(this.answerobject[this.indexvalue].hintStep!==undefined && this.answerobject[this.indexvalue].hintStep.length>0){
-         if(this.hintstepindex<this.answerobject[this.indexvalue].hintStep.length)
-         {
-         if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks!==undefined){
+    if(this.indexvalue<this.answerobject.length) {
+        if(this.answerobject[this.indexvalue].hintStep!==undefined && this.answerobject[this.indexvalue].hintStep.length>0) {
+         if(this.hintstepindex<this.answerobject[this.indexvalue].hintStep.length)  {
+         if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks!==undefined) {
             this.answer_label=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.fillUpData.stepText;
-            this.answersss=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.answers[0];
-           this.questionBindHtml('ans');
+           debugger;
+            $( "#answer_labeldiv").html().replace('____', this.answersss);
+             this.answersss=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.answers[0];
+           
+          
+            this.questionBindHtml('ans');
            this.hintstepindex=this.hintstepindex+1;
 
-         }
-         else if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex].plainStep!==undefined){
+         } else if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex].plainStep!==undefined) {
              this.answer_label=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].plainStep.stepText;
              this.hintstepindex=this.hintstepindex+1;
              this.questionBindHtml('ans');
-             debugger;
-             if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex]!==undefined && this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks!==undefined){
+             if(this.answerobject[this.indexvalue].hintStep[this.hintstepindex]!==undefined &&
+               this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks!==undefined) {
                  this.answer_label=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.fillUpData.stepText;
+                 $( "#answer_labeldiv").html().replace('____', this.answersss);
                  this.answersss=this.answerobject[this.indexvalue].hintStep[this.hintstepindex].fillInBlanks.answers[0];
                  this.questionBindHtml('ans');
                  this.hintstepindex=this.hintstepindex+1;
-             }
-             else if(this.answerobject[this.indexvalue].fillInBlanks!==undefined){
+             } else if(this.answerobject[this.indexvalue].fillInBlanks!==undefined){
                  this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText;
+                 $( "#answer_labeldiv").html().replace('____', this.answersss);
                  this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
                  this.questionBindHtml('ans');
                  this.indexvalue=this.indexvalue+1;
                  this.hintstepindex=this.hintstepindex+1;
              }
           }
-          
-         }    
-         else{
+         } else {
              this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText; 
+             $( "#answer_labeldiv").html().replace('____', this.answersss);
              this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
              this.indexvalue=this.indexvalue+1;
              this.questionBindHtml('ans');
              this.hintstepindex=0;
          }
-        }
-        else{
-       
-         this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText; 
-         this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
+        } else {
+       this.answer_label=this.answerobject[this.indexvalue].fillInBlanks.fillUpData.stepText; 
+       $( "#answer_labeldiv").html().replace('____', this.answersss); 
+       this.answersss=this.answerobject[this.indexvalue].fillInBlanks.answers[0];
          this.indexvalue=this.indexvalue+1;
          this.questionBindHtml('ans');
          this.hintstepindex=0;
